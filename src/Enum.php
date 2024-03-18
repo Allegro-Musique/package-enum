@@ -10,7 +10,6 @@ use Spatie\Enum\Exceptions\DuplicateLabelsException;
 use Spatie\Enum\Exceptions\DuplicateValuesException;
 use Spatie\Enum\Exceptions\UnknownEnumMethod;
 use Spatie\Enum\Exceptions\UnknownEnumProperty;
-use Stringable;
 use TypeError;
 
 /**
@@ -20,7 +19,7 @@ use TypeError;
  *
  * @psalm-consistent-constructor
  */
-abstract class Enum implements JsonSerializable, Stringable
+abstract class Enum implements JsonSerializable
 {
     /**
      * @var string|int
@@ -30,6 +29,8 @@ abstract class Enum implements JsonSerializable, Stringable
 
     /** @psalm-readonly */
     protected string $label;
+
+    protected $index;
 
     /** @psalm-var array<class-string, array<string, \Spatie\Enum\EnumDefinition>> */
     private static array $definitionCache = [];
@@ -77,6 +78,14 @@ abstract class Enum implements JsonSerializable, Stringable
      * @return string[]
      */
     public static function toLabels(): array
+    {
+        return array_values(static::toArray());
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function toIndexes(): array
     {
         return array_values(static::toArray());
     }
@@ -159,6 +168,7 @@ abstract class Enum implements JsonSerializable, Stringable
 
         $this->value = $definition->value;
         $this->label = $definition->label;
+        $this->index = $definition->index;
     }
 
     /**
@@ -178,17 +188,11 @@ abstract class Enum implements JsonSerializable, Stringable
             return $this->value;
         }
 
-        throw UnknownEnumProperty::new(static::class, $name);
-    }
+        if ($name === 'index') {
+            return $this->index;
+        }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function __isset(string $name): bool
-    {
-        return $name === 'label' || $name === 'value';
+        throw UnknownEnumProperty::new(static::class, $name);
     }
 
     /**
@@ -253,6 +257,11 @@ abstract class Enum implements JsonSerializable, Stringable
         return [];
     }
 
+    protected static function  indexes()
+    {
+        return [];
+    }
+
     /**
      * @param string|int $input
      *
@@ -300,12 +309,20 @@ abstract class Enum implements JsonSerializable, Stringable
             $labelMap = array_map($labelMap, array_combine($matches[1], $matches[1]));
         }
 
+        $indexMap = static::indexes();
+
+        if ($indexMap instanceof Closure) {
+            $indexMap = array_map($indexMap, array_combine($matches[1], $matches[1]));
+        }
+
         foreach ($matches[1] as $methodName) {
             $value = $valueMap[$methodName] = $valueMap[$methodName] ?? $methodName;
 
             $label = $labelMap[$methodName] = $labelMap[$methodName] ?? $methodName;
 
-            $definition[$methodName] = new EnumDefinition($methodName, $value, $label);
+            $index = $indexMap[$methodName] = $indexMap[$methodName] ?? $methodName;
+
+            $definition[$methodName] = new EnumDefinition($methodName, $value, $label, $index);
         }
 
         if (self::arrayHasDuplicates($valueMap)) {
@@ -314,6 +331,10 @@ abstract class Enum implements JsonSerializable, Stringable
 
         if (self::arrayHasDuplicates($labelMap)) {
             throw new DuplicateLabelsException(static::class);
+        }
+
+        if (self::arrayHasDuplicates($indexMap)) {
+            throw new DuplicateValuesException(static::class);
         }
 
         return static::$definitionCache[$className] ??= $definition;
