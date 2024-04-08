@@ -126,7 +126,7 @@ abstract class Enum implements JsonSerializable, \Stringable
     {
         try {
             return static::from($value);
-        } catch (BadMethodCallException $exception) {
+        } catch (BadMethodCallException) {
             return null;
         } catch (TypeError $exception) {
             if (
