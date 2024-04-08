@@ -172,10 +172,8 @@ abstract class Enum implements JsonSerializable
     }
 
     /**
-     * @param string $name
      *
      * @return int|string
-     *
      * @throws UnknownEnumProperty
      */
     public function __get(string $name)
@@ -196,8 +194,6 @@ abstract class Enum implements JsonSerializable
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
      *
      * @return static
      */
@@ -207,8 +203,6 @@ abstract class Enum implements JsonSerializable
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
      *
      * @return bool|mixed
      *

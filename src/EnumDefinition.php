@@ -12,9 +12,7 @@ class EnumDefinition
     private string $methodName;
 
     /**
-     * @param string $methodName
      * @param string|int $value
-     * @param string $label
      */
     public function __construct(string $methodName, public $value, public string $label, public $index)
     {

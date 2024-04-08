@@ -11,7 +11,6 @@ class FakerEnumProvider extends Base
     /**
      * A random instance of the enum you pass in.
      *
-     * @param string $enum
      *
      * @return Enum
      */
@@ -31,7 +30,6 @@ class FakerEnumProvider extends Base
     /**
      * A random value of the enum you pass in.
      *
-     * @param string $enum
      *
      * @return string|int
      */
@@ -51,7 +49,6 @@ class FakerEnumProvider extends Base
     /**
      * A random label of the enum you pass in.
      *
-     * @param string $enum
      *
      * @return string
      */
