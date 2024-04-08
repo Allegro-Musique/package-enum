@@ -9,12 +9,6 @@ namespace Spatie\Enum;
  */
 class EnumDefinition
 {
-    /** @var string|int */
-    public $value;
-
-    public string $label;
-
-    public $index;
     private string $methodName;
 
     /**
@@ -22,12 +16,9 @@ class EnumDefinition
      * @param string|int $value
      * @param string $label
      */
-    public function __construct(string $methodName, $value, string $label, $index)
+    public function __construct(string $methodName, public $value, public string $label, public $index)
     {
         $this->methodName = strtolower($methodName);
-        $this->value = $value;
-        $this->label = $label;
-        $this->index = $index;
     }
 
     /**

@@ -157,7 +157,7 @@ abstract class EnumAssertions
         }
 
         return forward_static_call(
-            [get_class($enum), 'make'],
+            [$enum::class, 'make'],
             $value
         );
     }

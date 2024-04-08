@@ -229,7 +229,7 @@ abstract class Enum implements JsonSerializable
     {
         foreach ($others as $other) {
             if (
-                get_class($this) === get_class($other)
+                static::class === $other::class
                 && $this->value === $other->value
             ) {
                 return true;
