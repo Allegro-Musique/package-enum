@@ -9,7 +9,7 @@ namespace Spatie\Enum;
  */
 class EnumDefinition
 {
-    private string $methodName;
+    private readonly string $methodName;
 
     /**
      * @param string|int $value

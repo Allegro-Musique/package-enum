@@ -19,7 +19,7 @@ use TypeError;
  *
  * @psalm-consistent-constructor
  */
-abstract class Enum implements JsonSerializable
+abstract class Enum implements JsonSerializable, \Stringable
 {
     /**
      * @var string|int
@@ -210,7 +210,7 @@ abstract class Enum implements JsonSerializable
      */
     public function __call(string $name, array $arguments)
     {
-        if (strpos($name, 'is') === 0) {
+        if (str_starts_with($name, 'is')) {
             $other = static::from(substr($name, 2));
 
             return $this->equals($other);
